@@ -1,0 +1,17 @@
+name: simple-chat
+version: 0.1.0
+
+authors:
+  - Jonathan Fairbanks <fairbanks.jonathan96@gmail.com>
+
+targets:
+  simple-chat:
+    main: src/simple-chat.cr
+
+dependencies:
+  kemal:
+    github: kemalcr/kemal
+
+crystal: 0.28.0
+
+license: MIT

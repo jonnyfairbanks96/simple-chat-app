@@ -1,0 +1,16 @@
+body {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+}
+
+table {
+  border: 1px solid black;
+}
+
+.bottom {
+  position: absolute;
+  bottom: 100px;
+  flex-direction: row;
+  justify-content: space-between;
+}

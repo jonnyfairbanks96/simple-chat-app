@@ -1,22 +1,30 @@
 window.addEventListener('DOMContentLoaded', (event) => {
-  console.log('DOM fully loaded and parsed');
+  if (document.cookie == "") {
+    document.cookie = prompt("What is your name?");
+  }
 
   var clusterize = new Clusterize({
     scrollId: 'scrollArea',
     contentId: 'contentArea'
   });
 
+  fetch('messages').then((response) => {
+    return response.json();
+  }).then((data) => {
+    var contentToAdd = data.messages.map((message) => `<div>${message}</div>`);
+    clusterize.update(contentToAdd);
+    clusterize.scroll_elem.scrollTop = clusterize.scroll_elem.scrollHeight
+  });
+
   // Create WebSocket connection.
-  var socket = new WebSocket('ws://jfairb1996dev.hopto.org:3000/chat');
+  var socket = new WebSocket('ws:/' + window.location.host + '/chat');
 
   // Connection opened
   socket.addEventListener('open', function (event) {
-    socket.send('Hello Server!');
   });
 
   // Listen for messages
   socket.addEventListener('message', function (event) {
-    console.log('Message from server:', event.data);
     clusterize.append([`<div>${event.data}</div>`]);
     clusterize.scroll_elem.scrollTop = clusterize.scroll_elem.scrollHeight
   });
@@ -27,7 +35,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     if (event.keyCode == 13) {
       var messageValue = chatMessage.value;
       if (messageValue != "") {
-        socket.send(messageValue);
+        socket.send(`${document.cookie}: ${messageValue}`);
       }
 
       chatMessage.value = "";

@@ -1,6 +1,6 @@
 window.addEventListener('DOMContentLoaded', (event) => {
-  if (document.cookie == "") {
-    document.cookie = prompt("What is your name?");
+  if (window.name == "") {
+    window.name = prompt("What is your name?");
   }
 
   var clusterize = new Clusterize({
@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', (event) => {
     if (event.keyCode == 13) {
       var messageValue = chatMessage.value;
       if (messageValue != "") {
-        socket.send(`${document.cookie}: ${messageValue}`);
+        socket.send(`${window.name}: ${messageValue}`);
       }
 
       chatMessage.value = "";

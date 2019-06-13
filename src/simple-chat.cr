@@ -1,8 +1,15 @@
-require "json"
+require "db"
+require "pg"
 require "kemal"
 
 MESSAGES = [] of String
 SOCKETS = [] of HTTP::WebSocket
+
+def get_messages
+  DB.open "postgres://jfairb1996:#{ENV["DB_PASS"]}@localhost/simple_chat" do |db|
+    return db.query "select messages from chat order by id" do |rs|
+  end
+end
 
 get "/" do
   render "public/index.ecr"
@@ -10,7 +17,7 @@ end
 
 get "/messages" do |env|
   env.response.content_type = "application/json"
-  {messages: MESSAGES}.to_json
+  {messages: get_messages}.to_json
 end
 
 ws "/chat" do |socket|
@@ -22,6 +29,10 @@ ws "/chat" do |socket|
     MESSAGES.push message
     SOCKETS.each do |socket|
       socket.send message
+    end
+
+    DB.open "postgres://jfairb1996:#{ENV["DB_PASS"]}@localhost/simple_chat" do |db|
+      db.exec "insert into chat(messages) values ($1)", message
     end
   end
 
